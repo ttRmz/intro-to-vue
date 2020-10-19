@@ -6,36 +6,36 @@
       btnTitle="Vider le panier"
       :btnFunction="clearCartAndRefresh"
     />
-    <div class="card__content">
+    <div class="cart__content">
       <table v-if="cart.length > 0">
         <thead>
           <tr>
-            <td class="card__cell">id</td>
-            <td class="card__cell">Product name</td>
-            <td class="card__cell">Unit price</td>
-            <td class="card__cell">Total price</td>
-            <td class="card__cell">Quantity</td>
-            <td class="card__cell"></td>
+            <td class="cart__cell">id</td>
+            <td class="cart__cell">Product name</td>
+            <td class="cart__cell">Unit price</td>
+            <td class="cart__cell">Total price</td>
+            <td class="cart__cell">Quantity</td>
+            <td class="cart__cell"></td>
           </tr>
         </thead>
 
         <tbody>
           <tr v-for="product in cart" :key="product.id">
-            <td class="card__cell">
+            <td class="cart__cell">
               {{ product.id }}
             </td>
-            <td class="card__cell">
+            <td class="cart__cell">
               <router-link
                 :to="{ name: 'ProductDetail', params: { id: product.id } }"
               >
                 {{ product.title }}
               </router-link>
             </td>
-            <td class="card__cell">{{ product.price }}$</td>
-            <td class="card__cell">
+            <td class="cart__cell">{{ product.price }}$</td>
+            <td class="cart__cell">
               {{ (product.price * product.qty).toFixed(2) }}$
             </td>
-            <td class="card__cell">
+            <td class="cart__cell">
               <input
                 min="0"
                 type="number"
@@ -46,13 +46,24 @@
                 :value="product.qty"
               />
             </td>
-            <td class="card__cell">
+            <td class="cart__cell">
               <button @click="removeItemFormCart(product.id)">remove</button>
             </td>
           </tr>
         </tbody>
       </table>
       <p v-else>Votre panier est vide</p>
+
+      <span class="cart__total"
+        >Total :
+        <b>
+          {{
+            cart
+              .reduce((acc, product) => acc + product.qty * product.price, 0)
+              .toFixed(2)
+          }}$
+        </b>
+      </span>
     </div>
   </div>
 </template>
@@ -93,7 +104,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card__content {
+.cart__content {
+  margin-right: 48px;
+  margin-left: 48px;
   margin-top: 32px;
   margin-bottom: 18px;
   display: flex;
@@ -102,7 +115,12 @@ export default {
   flex-direction: column;
 }
 
-.card__cell:not(:first-child) {
+.cart__cell:not(:first-child) {
   padding-left: 18px;
+}
+
+.cart__total {
+  margin-top: 24px;
+  margin-bottom: 32px;
 }
 </style>
